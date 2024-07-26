@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Home from './components/Home';
+import About from './components/About';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
+import GlobalStyle from './styles/GlobalStyle';
+import { lightTheme, darkTheme } from './styles/theme';
+import { ThemeProvider } from 'styled-components';
 
-function App() {
+const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const location = useLocation();
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <GlobalStyle />
+      <Header toggleTheme={toggleTheme} />
+      <AnimatePresence>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </AnimatePresence>
+      <Footer />
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
